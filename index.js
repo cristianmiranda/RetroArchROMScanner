@@ -3,40 +3,46 @@ const fs = require('fs'), path = require('path');
 const args = process.argv.slice(2);
 const romsDirectory = args[0];
 const retroArchDirectory = args[1];
-const dbName = args[2];
 
-// Usage: node index.js "/Users/cristianmiranda/Desktop/Nintendo Switch/rom_scanner_app/roms/Gameboy Advance" "/retroarch/roms/Gameboy Advance" "Nintendo - Game Boy Advance.lpl"
+// Usage: node index.js "/Users/cristianmiranda/Desktop/Nintendo Switch/2 Tools/rom_scanner_app/roms" "/retroarch/roms"
 
-function walkDir(dir, callback) {
-	fs.readdirSync(dir).forEach( f => {
-		let dirPath = path.join(dir, f);
-		let isDirectory = fs.statSync(dirPath).isDirectory();
-		isDirectory ?
-			walkDir(dirPath, callback) : callback(path.join(dir, f), f);
+const main = (rootDir, callback) => {
+	fs.readdirSync(rootDir).forEach( romsDir => {
+		let romsDirPath = path.join(rootDir, romsDir);
+		let isDirectory = fs.statSync(romsDirPath).isDirectory();
+		if (isDirectory) {
+			processRomsDir(romsDirPath, romsDir)
+		}
 	});
-}
 
-let items = [];
-walkDir(romsDirectory, function(filePath, fileName) {
-	console.log("Processing: " + fileName);
+	console.log("DONE!");
+};
 
-	let item = {};
-	item.path = retroArchDirectory + "/" + fileName;
-	item.label = fileName.split('.').slice(0, -1).join('.');
-	item.core_path = "DETECT";
-	item.core_name = "DETECT";
-	item.crc32 = "88DAB27F|crc";
-	item.db_name = dbName;
+const processRomsDir = (romsDirPath, romsDir) => {
+	let items = [];
+	fs.readdirSync(romsDirPath).forEach( rom => {
+		if (rom !== '.DS_Store') {
+			console.log("Processing: " + rom);
 
-	items.push(item);
-});
+			let item = {};
+			item.path = retroArchDirectory + "/" + romsDir + "/" + rom;
+			item.label = rom.split('.').slice(0, -1).join('.');
+			item.core_path = "DETECT";
+			item.core_name = "DETECT";
+			item.crc32 = "88DAB27F|crc";
+			item.db_name = romsDir;
 
-let playlist = {};
-playlist.version = "1.0";
-playlist.items = items;
+			items.push(item);
+		}
+	});
 
-console.dir(playlist);
-let data = JSON.stringify(playlist, null, 2);
-fs.writeFileSync(romsDirectory + "/" + dbName, data);
+	let playlist = {};
+	playlist.version = "1.0";
+	playlist.items = items;
 
-console.log("DONE!");
+	console.dir(playlist);
+	let data = JSON.stringify(playlist, null, 2);
+	fs.writeFileSync(romsDirectory + "/" + romsDir + ".lpl", data);
+};
+
+main(romsDirectory);
