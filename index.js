@@ -42,7 +42,7 @@ const processRomsDir = (romsDirPath, romsDir) => {
 
 	console.dir(playlist);
 	let data = JSON.stringify(playlist, null, 2);
-	fs.writeFileSync(romsDirectory + "/" + romsDir + ".lpl", data);
+	fs.writeFileSync(romsDirectory + "/../playlists/" + romsDir + ".lpl", data);
 };
 
 main(romsDirectory);
