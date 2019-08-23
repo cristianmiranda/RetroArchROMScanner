@@ -1,8 +1,11 @@
 {
   "name": "retroarchromscanner",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "RetroArch ROM Scanner",
   "main": "index.js",
+  "bin": {
+    "retroarchromscanner": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +18,6 @@
   "bugs": {
     "url": "https://github.com/cristianmiranda/RetroArchROMScanner/issues"
   },
-  "homepage": "https://github.com/cristianmiranda/RetroArchROMScanner#readme"
+  "homepage": "https://github.com/cristianmiranda/RetroArchROMScanner#readme",
+  "dependencies": {}
 }
