@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs'), path = require('path');
 
 const args = process.argv.slice(2);
